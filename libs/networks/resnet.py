@@ -2,7 +2,6 @@
 
 from __future__ import absolute_import, print_function, division
 
-
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 from libs.configs import cfgs
@@ -53,14 +52,14 @@ def fusion_two_layer(C_i, P_j, scope):
         h, w = tf.shape(C_i)[1], tf.shape(C_i)[2]
         upsample_p = tf.image.resize_bilinear(P_j,
                                               size=[h, w],
-                                              name='up_sample_'+level_name)
+                                              name='up_sample_' + level_name)
 
         reduce_dim_c = slim.conv2d(C_i,
                                    num_outputs=256,
                                    kernel_size=[1, 1], stride=1,
-                                   scope='reduce_dim_'+level_name)
+                                   scope='reduce_dim_' + level_name)
 
-        add_f = 0.5*upsample_p + 0.5*reduce_dim_c
+        add_f = 0.5 * upsample_p + 0.5 * reduce_dim_c
 
         # P_i = slim.conv2d(add_f,
         #                   num_outputs=256, kernel_size=[3, 3], stride=1,
@@ -117,7 +116,7 @@ def resnet_base(img_batch, scope_name, is_training=True):
             net = slim.max_pool2d(
                 net, [3, 3], stride=2, padding='VALID', scope='pool1')
 
-    not_freezed = [False] * cfgs.FIXED_BLOCKS + (4-cfgs.FIXED_BLOCKS)*[True]
+    not_freezed = [False] * cfgs.FIXED_BLOCKS + (4 - cfgs.FIXED_BLOCKS) * [True]
     # Fixed_Blocks can be 1~3
 
     with slim.arg_scope(resnet_arg_scope(is_training=(is_training and not_freezed[0]))):
@@ -188,7 +187,7 @@ def resnet_base(img_batch, scope_name, is_training=True):
             for level in range(4, 1, -1):  # build [P4, P3, P2]
 
                 pyramid_dict['P%d' % level] = fusion_two_layer(C_i=feature_dict["C%d" % level],
-                                                               P_j=pyramid_dict["P%d" % (level+1)],
+                                                               P_j=pyramid_dict["P%d" % (level + 1)],
                                                                scope='build_P%d' % level)
             for level in range(4, 1, -1):
                 pyramid_dict['P%d' % level] = slim.conv2d(pyramid_dict['P%d' % level],
@@ -207,7 +206,6 @@ def resnet_base(img_batch, scope_name, is_training=True):
     # return list rather than dict, to avoid dict is unordered
 
 
-
 def restnet_head(inputs, is_training, scope_name):
     '''
 
@@ -218,7 +216,6 @@ def restnet_head(inputs, is_training, scope_name):
     '''
 
     with tf.variable_scope('build_fc_layers'):
-
         # fc1 = slim.conv2d(inputs=inputs,
         #                   num_outputs=1024,
         #                   kernel_size=[7, 7],
@@ -236,33 +233,3 @@ def restnet_head(inputs, is_training, scope_name):
 
         # we add fc3 to increase the ability of fast-rcnn head
         return fc2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

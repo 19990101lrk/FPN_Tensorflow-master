@@ -7,6 +7,7 @@ from __future__ import division
 import tensorflow as tf
 import os
 import sys
+
 sys.path.append('../../')
 
 from data.io import image_preprocess_multi_gpu as image_preprocess
@@ -14,7 +15,6 @@ from libs.configs import cfgs
 
 
 def read_single_example_and_decode(filename_queue):
-
     # tfrecord_options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.ZLIB)
 
     # reader = tf.TFRecordReader(options=tfrecord_options)
@@ -47,20 +47,21 @@ def read_single_example_and_decode(filename_queue):
 
 
 def read_and_prepocess_single_img(filename_queue, shortside_len, is_training):
-
     img_name, img, gtboxes_and_label, num_objects = read_single_example_and_decode(filename_queue)
 
     img = tf.cast(img, tf.float32)
 
     if is_training:
-        img, gtboxes_and_label, img_h, img_w = image_preprocess.short_side_resize(img_tensor=img, gtboxes_and_label=gtboxes_and_label,
+        img, gtboxes_and_label, img_h, img_w = image_preprocess.short_side_resize(img_tensor=img,
+                                                                                  gtboxes_and_label=gtboxes_and_label,
                                                                                   target_shortside_len=shortside_len,
                                                                                   length_limitation=cfgs.IMG_MAX_LENGTH)
         img, gtboxes_and_label = image_preprocess.random_flip_left_right(img_tensor=img,
                                                                          gtboxes_and_label=gtboxes_and_label)
 
     else:
-        img, gtboxes_and_label, img_h, img_w = image_preprocess.short_side_resize(img_tensor=img, gtboxes_and_label=gtboxes_and_label,
+        img, gtboxes_and_label, img_h, img_w = image_preprocess.short_side_resize(img_tensor=img,
+                                                                                  gtboxes_and_label=gtboxes_and_label,
                                                                                   target_shortside_len=shortside_len,
                                                                                   length_limitation=cfgs.IMG_MAX_LENGTH)
     if cfgs.NET_NAME in ['resnet101_v1d', 'resnet50_v1d']:
@@ -96,16 +97,17 @@ def next_batch(dataset_name, batch_size, shortside_len, is_training):
     # shortside_len = tf.constant(shortside_len)
     # shortside_len = tf.random_shuffle(shortside_len)[0]
 
-    img_name, img, gtboxes_and_label, num_obs, img_h, img_w = read_and_prepocess_single_img(filename_queue, shortside_len,
+    img_name, img, gtboxes_and_label, num_obs, img_h, img_w = read_and_prepocess_single_img(filename_queue,
+                                                                                            shortside_len,
                                                                                             is_training=is_training)
 
     img_name_batch, img_batch, gtboxes_and_label_batch, num_obs_batch, img_h_batch, img_w_batch = \
         tf.train.batch(
-                       [img_name, img, gtboxes_and_label, num_obs, img_h, img_w],
-                       batch_size=batch_size,
-                       capacity=16,
-                       num_threads=16,
-                       dynamic_pad=True)
+            [img_name, img, gtboxes_and_label, num_obs, img_h, img_w],
+            batch_size=batch_size,
+            capacity=16,
+            num_threads=16,
+            dynamic_pad=True)
     return img_name_batch, img_batch, gtboxes_and_label_batch, num_obs_batch, img_h_batch, img_w_batch
 
 

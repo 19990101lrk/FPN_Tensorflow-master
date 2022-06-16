@@ -10,8 +10,8 @@ import os
 from data.io import image_preprocess
 from libs.configs import cfgs
 
-def read_single_example_and_decode(filename_queue):
 
+def read_single_example_and_decode(filename_queue):
     # tfrecord_options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.ZLIB)
 
     # reader = tf.TFRecordReader(options=tfrecord_options)
@@ -44,7 +44,6 @@ def read_single_example_and_decode(filename_queue):
 
 
 def read_and_prepocess_single_img(filename_queue, shortside_len, is_training):
-
     img_name, img, gtboxes_and_label, num_objects = read_single_example_and_decode(filename_queue)
 
     img = tf.cast(img, tf.float32)
@@ -91,9 +90,9 @@ def next_batch(dataset_name, batch_size, shortside_len, is_training):
                                                                               is_training=is_training)
     img_name_batch, img_batch, gtboxes_and_label_batch, num_obs_batch = \
         tf.train.batch(
-                       [img_name, img, gtboxes_and_label, num_obs],
-                       batch_size=batch_size,
-                       capacity=1,
-                       num_threads=1,
-                       dynamic_pad=True)
+            [img_name, img, gtboxes_and_label, num_obs],
+            batch_size=batch_size,
+            capacity=1,
+            num_threads=1,
+            dynamic_pad=True)
     return img_name_batch, img_batch, gtboxes_and_label_batch, num_obs_batch

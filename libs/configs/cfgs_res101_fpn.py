@@ -2,6 +2,7 @@
 from __future__ import division, print_function, absolute_import
 import os
 import tensorflow as tf
+
 '''
 cls : person|| Recall: 0.9200530035335689 || Precison: 0.009050166947990866|| AP: 0.8413662097687251
 ____________________
@@ -96,8 +97,8 @@ ADD_BOX_IN_TENSORBOARD = True
 
 # ---------------------------------------- System_config
 ROOT_PATH = os.path.abspath('../')
-print (20*"++--")
-print (ROOT_PATH)
+print(20 * "++--")
+print(ROOT_PATH)
 GPU_GROUP = "4"
 SHOW_TRAIN_INFO_INTE = 10
 SMRY_ITER = 100
@@ -136,8 +137,8 @@ FAST_RCNN_CLASSIFICATION_LOSS_WEIGHT = 1.0
 RPN_SIGMA = 3.0
 FASTRCNN_SIGMA = 1.0
 
-MUTILPY_BIAS_GRADIENT = None   # 2.0  # if None, will not multipy
-GRADIENT_CLIPPING_BY_NORM = None   # 10.0  if None, will not clip
+MUTILPY_BIAS_GRADIENT = None  # 2.0  # if None, will not multipy
+GRADIENT_CLIPPING_BY_NORM = None  # 10.0  if None, will not clip
 
 EPSILON = 1e-5
 MOMENTUM = 0.9
@@ -199,11 +200,8 @@ SHOW_SCORE_THRSHOLD = 0.5  # only show in tensorboard
 FAST_RCNN_NMS_IOU_THRESHOLD = 0.3  # 0.6
 FAST_RCNN_NMS_MAX_BOXES_PER_CLASS = 100
 FAST_RCNN_IOU_POSITIVE_THRESHOLD = 0.5
-FAST_RCNN_IOU_NEGATIVE_THRESHOLD = 0.0   # 0.1 < IOU < 0.5 is negative
+FAST_RCNN_IOU_NEGATIVE_THRESHOLD = 0.0  # 0.1 < IOU < 0.5 is negative
 FAST_RCNN_MINIBATCH_SIZE = 256  # if is -1, that is train with OHEM
 FAST_RCNN_POSITIVE_RATE = 0.25
 
 ADD_GTBOXES_TO_TRAIN = False
-
-
-

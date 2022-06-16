@@ -31,8 +31,8 @@ def make_anchors(base_anchor_size, anchor_scales, anchor_ratios,
         y_centers = tf.range(featuremap_height, dtype=tf.float32) * stride
 
         if cfgs.USE_CENTER_OFFSET:
-            x_centers = x_centers + stride/2.
-            y_centers = y_centers + stride/2.
+            x_centers = x_centers + stride / 2.
+            y_centers = y_centers + stride / 2.
 
         x_centers, y_centers = tf.meshgrid(x_centers, y_centers)
 
@@ -45,13 +45,12 @@ def make_anchors(base_anchor_size, anchor_scales, anchor_ratios,
         box_sizes = tf.stack([ws, hs], axis=2)
         box_sizes = tf.reshape(box_sizes, [-1, 2])
         # anchors = tf.concat([anchor_centers, box_sizes], axis=1)
-        anchors = tf.concat([anchor_centers - 0.5*box_sizes,
-                             anchor_centers + 0.5*box_sizes], axis=1)
+        anchors = tf.concat([anchor_centers - 0.5 * box_sizes,
+                             anchor_centers + 0.5 * box_sizes], axis=1)
         return anchors
 
 
 def enum_scales(base_anchor, anchor_scales):
-
     anchor_scales = base_anchor * tf.constant(anchor_scales, dtype=tf.float32, shape=(len(anchor_scales), 1))
 
     return anchor_scales
@@ -76,6 +75,7 @@ def enum_ratios(anchors, anchor_ratios):
 
 if __name__ == '__main__':
     import os
+
     os.environ["CUDA_VISIBLE_DEVICES"] = '0'
     base_anchor_size = 256
     anchor_scales = [1.0]
@@ -89,4 +89,4 @@ if __name__ == '__main__':
     with tf.Session() as sess:
         sess.run(init)
         anchor_result = sess.run(anchors)
-        print (anchor_result.shape)
+        print(anchor_result.shape)

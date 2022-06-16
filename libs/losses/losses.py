@@ -18,7 +18,7 @@ def _smooth_l1_loss_base(bbox_pred, bbox_targets, sigma=1.0):
     :param sigma:
     :return:
     '''
-    sigma_2 = sigma**2
+    sigma_2 = sigma ** 2
 
     box_diff = bbox_pred - bbox_targets
 
@@ -29,6 +29,7 @@ def _smooth_l1_loss_base(bbox_pred, bbox_targets, sigma=1.0):
     loss_box = tf.pow(box_diff, 2) * (sigma_2 / 2.0) * smoothL1_sign \
                + (abs_box_diff - (0.5 / sigma_2)) * (1.0 - smoothL1_sign)
     return loss_box
+
 
 def smooth_l1_loss_rpn(bbox_pred, bbox_targets, label, sigma=1.0):
     '''
@@ -51,6 +52,7 @@ def smooth_l1_loss_rpn(bbox_pred, bbox_targets, label, sigma=1.0):
     bbox_loss = tf.reduce_sum(selected_value) / tf.maximum(1.0, tf.reduce_sum(non_ignored_mask))
 
     return bbox_loss
+
 
 def smooth_l1_loss_rcnn(bbox_pred, bbox_targets, label, num_classes, sigma=1.0):
     '''
@@ -82,11 +84,11 @@ def smooth_l1_loss_rcnn(bbox_pred, bbox_targets, label, num_classes, sigma=1.0):
 
     normalizer = tf.to_float(tf.shape(bbox_pred)[0])
     bbox_loss = tf.reduce_sum(
-        tf.reduce_sum(value * inside_mask, 1)*outside_mask) / normalizer
+        tf.reduce_sum(value * inside_mask, 1) * outside_mask) / normalizer
 
     return bbox_loss
 
+
 def sum_ohem_loss(cls_score, label, bbox_pred, bbox_targets,
                   nr_ohem_sampling, nr_classes, sigma=1.0):
-
     raise NotImplementedError('not implement Now. YJR will implemetn in the future')

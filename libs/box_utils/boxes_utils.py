@@ -6,6 +6,7 @@ from __future__ import print_function
 
 import tensorflow as tf
 
+
 def ious_calu(boxes_1, boxes_2):
     '''
 
@@ -45,7 +46,6 @@ def clip_boxes_to_img_boundaries(decode_boxes, img_shape):
     '''
 
     with tf.name_scope('clip_boxes_to_img_boundaries'):
-
         # xmin, ymin, xmax, ymax = tf.unstack(decode_boxes, axis=1)
         xmin = decode_boxes[:, 0]
         ymin = decode_boxes[:, 1]
@@ -55,11 +55,11 @@ def clip_boxes_to_img_boundaries(decode_boxes, img_shape):
 
         img_h, img_w = tf.cast(img_h, tf.float32), tf.cast(img_w, tf.float32)
 
-        xmin = tf.maximum(tf.minimum(xmin, img_w-1.), 0.)
-        ymin = tf.maximum(tf.minimum(ymin, img_h-1.), 0.)
+        xmin = tf.maximum(tf.minimum(xmin, img_w - 1.), 0.)
+        ymin = tf.maximum(tf.minimum(ymin, img_h - 1.), 0.)
 
-        xmax = tf.maximum(tf.minimum(xmax, img_w-1.), 0.)
-        ymax = tf.maximum(tf.minimum(ymax, img_h-1.), 0.)
+        xmax = tf.maximum(tf.minimum(xmax, img_w - 1.), 0.)
+        ymax = tf.maximum(tf.minimum(ymax, img_h - 1.), 0.)
 
         return tf.transpose(tf.stack([xmin, ymin, xmax, ymax]))
 
@@ -89,7 +89,6 @@ def filter_outside_boxes(boxes, img_h, img_w):
 
 
 def padd_boxes_with_zeros(boxes, scores, max_num_of_boxes):
-
     '''
     num of boxes less than max num of boxes, so it need to pad with zeros[0, 0, 0, 0]
     :param boxes:

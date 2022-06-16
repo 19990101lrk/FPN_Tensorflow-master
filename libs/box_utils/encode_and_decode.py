@@ -8,7 +8,6 @@ import tensorflow as tf
 import numpy as np
 
 
-
 # def encode_boxes(ex_rois, gt_rois, scale_factor=None):
 #     ex_widths = ex_rois[:, 2] - ex_rois[:, 0] + 1.0
 #     ex_heights = ex_rois[:, 3] - ex_rois[:, 1] + 1.0
@@ -153,8 +152,8 @@ def encode_boxes(unencode_boxes, reference_boxes, scale_factors=None):
 
     t_xcenter = (x_center - reference_xcenter) / reference_w
     t_ycenter = (y_center - reference_ycenter) / reference_h
-    t_w = np.log(w/reference_w)
-    t_h = np.log(h/reference_h)
+    t_w = np.log(w / reference_w)
+    t_h = np.log(h / reference_h)
 
     if scale_factors:
         t_xcenter *= scale_factors[0]

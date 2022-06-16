@@ -10,6 +10,7 @@ import time
 import cv2
 import argparse
 import numpy as np
+
 sys.path.append("../")
 
 from data.io.image_preprocess import short_side_resize_for_inference_data
@@ -20,7 +21,6 @@ from help_utils import tools
 
 
 def detect(det_net, inference_save_path, real_test_imgname_list):
-
     # 1. preprocess img
     img_plac = tf.placeholder(dtype=tf.uint8, shape=[None, None, 3])  # is RGB. not GBR
     img_batch = tf.cast(img_plac, tf.float32)
@@ -28,7 +28,7 @@ def detect(det_net, inference_save_path, real_test_imgname_list):
                                                      target_shortside_len=cfgs.IMG_SHORT_SIDE_LEN,
                                                      length_limitation=cfgs.IMG_MAX_LENGTH)
     img_batch = img_batch - tf.constant(cfgs.PIXEL_MEAN)
-    img_batch = tf.expand_dims(img_batch, axis=0) # [1, None, None, 3]
+    img_batch = tf.expand_dims(img_batch, axis=0)  # [1, None, None, 3]
 
     detection_boxes, detection_scores, detection_category = det_net.build_whole_detection_network(
         input_img_batch=img_batch,
@@ -51,13 +51,12 @@ def detect(det_net, inference_save_path, real_test_imgname_list):
             print('restore model')
 
         for i, a_img_name in enumerate(real_test_imgname_list):
-
             raw_img = cv2.imread(a_img_name)
             start = time.time()
             resized_img, detected_boxes, detected_scores, detected_categories = \
                 sess.run(
                     [img_batch, detection_boxes, detection_scores, detection_category],
-                    feed_dict={img_plac: raw_img}  
+                    feed_dict={img_plac: raw_img}
                 )
             end = time.time()
             # print("{} cost time : {} ".format(img_name, (end - start)))
@@ -94,9 +93,8 @@ def detect(det_net, inference_save_path, real_test_imgname_list):
 
 
 def test(test_dir, inference_save_path):
-
     test_imgname_list = [os.path.join(test_dir, img_name) for img_name in os.listdir(test_dir)
-                                                          if img_name.endswith(('.jpg', '.png', '.jpeg', '.tif', '.tiff'))]
+                         if img_name.endswith(('.jpg', '.png', '.jpeg', '.tif', '.tiff'))]
     assert len(test_imgname_list) != 0, 'test_dir has no imgs there.' \
                                         ' Note that, we only support img format of (.jpg, .png, and .tiff) '
 
@@ -130,26 +128,9 @@ def parse_args():
 
 
 if __name__ == '__main__':
-
     args = parse_args()
     print('Called with args:')
     print(args)
     os.environ["CUDA_VISIBLE_DEVICES"] = args.GPU
     test(args.data_dir,
          inference_save_path=args.save_dir)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
